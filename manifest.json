@@ -1,0 +1,10 @@
+{
+  "id": "stacked-tasks",
+  "name": "Stacked Tasks",
+  "version": "0.1.0",
+  "minAppVersion": "1.5.0",
+  "description": "Move tasks and subtasks between daily notes. Moving a subtask rebuilds its parent headings in the destination, so context travels with the task.",
+  "author": "lowkeysam",
+  "authorUrl": "https://github.com/lowkeysam",
+  "isDesktopOnly": false
+}

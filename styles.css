@@ -1,0 +1,16 @@
+.stacked-tasks-summary {
+  color: var(--text-muted);
+  font-style: italic;
+  margin-top: 0;
+}
+
+.stacked-tasks-quick {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--size-4-2);
+  margin-bottom: var(--size-4-4);
+}
+
+.stacked-tasks-quick button {
+  flex: 1 1 auto;
+}
