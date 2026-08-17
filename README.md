@@ -102,6 +102,15 @@ half the value of rolling it over at all.
 This is a fresh implementation rather than a fork, but it is unmistakably a
 descendant, and it is GPL-3.0 for the same reason Slated was.
 
+I wrote to Tony before publishing rather than after. He gave his permission and
+asked for two things: a new plugin ID, so that lingering Slated installations
+could not pick up my builds, and a new name, so that it was clear this is a
+separate plugin. Both were done before the first release — the ID is
+`stacked-tasks` and the name is "Stacked Tasks". He also pointed me toward
+[TaskNotes](https://community.obsidian.md/plugins/tasknotes), which is where he
+has since moved his own task list; it takes a file-per-task approach and is
+worth a look if the plain-markdown model here is not what you are after.
+
 ## Licence
 
 GPL-3.0. See [LICENSE](LICENSE).
