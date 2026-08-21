@@ -67,7 +67,10 @@ None ship with a default hotkey — bind whichever you use in
 - **Remove parents left empty** — delete a container whose last child moved out.
 - **Treat as sequential** — numbered lists only (default), all lists, or never.
 - **Link back to the original note** — aliased, plain, or off.
-- **Keep moved tasks in place** — mark the original `[>]` instead of deleting it.
+- **Keep moved tasks in place** — mark the original `[>]` instead of deleting
+  it. The marker is applied to the whole moved subtree (completed children keep
+  their `[x]`), and a link to the destination note (`[[2026-08-24|→ to]]`) is
+  appended so the original note shows where the task went.
 
 ## Compatibility
 

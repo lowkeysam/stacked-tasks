@@ -15,6 +15,10 @@ const BLOCK_ID_RE = /\s+\^[a-zA-Z0-9-]+\s*$/;
 const ORIGIN_LINK_RE = /\s*[<>]{1,2}\[\[[^\]]+\]\]/g;
 const ALIASED_ORIGIN_RE = /\s*\[\[[^\]]*\|\s*[←→<>][^\]]*\]\]/g;
 
+/** Destination markers only: `>[[note]]` (Slated) and `[[note|→ …]]` (ours). */
+const DEST_LINK_RE = /\s*>{1,2}\[\[[^\]]+\]\]/g;
+const ALIASED_DEST_RE = /\s*\[\[[^\]]*\|\s*→[^\]]*\]\]/g;
+
 /** Emoji metadata used by the Tasks plugin, with its trailing value. */
 const TASKS_FIELD_RE = /\s*[➕🛫⏳📅✅❌🔁🆔⛔]️?\s*\S*/gu;
 /** Bare priority emoji, which carry no value. */
@@ -73,6 +77,37 @@ export const appendOriginLink = (
     style === 'aliased'
       ? `[[${sourceNoteName}|${alias}]]`
       : `[[${sourceNoteName}]]`;
+
+  return `${body} ${link}${blockId}`;
+};
+
+/**
+ * Append a link to the note a task was moved to. Written on the source line
+ * when moved tasks are kept in place, so the original note answers "where did
+ * this go?" without a search. Replaces any previous destination link, but
+ * leaves origin links alone — a line can carry both directions.
+ */
+export const appendDestinationLink = (
+  raw: string,
+  targetNoteName: string,
+  style: OriginStyle,
+  alias: string,
+): string => {
+  if (style === 'none' || !targetNoteName) {
+    return raw;
+  }
+
+  const blockIdMatch = BLOCK_ID_RE.exec(raw);
+  const blockId = blockIdMatch ? blockIdMatch[0] : '';
+  const body = stripBlockId(raw)
+    .replace(ALIASED_DEST_RE, '')
+    .replace(DEST_LINK_RE, '')
+    .trimEnd();
+
+  const link =
+    style === 'aliased'
+      ? `[[${targetNoteName}|${alias}]]`
+      : `[[${targetNoteName}]]`;
 
   return `${body} ${link}${blockId}`;
 };

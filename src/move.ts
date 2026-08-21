@@ -22,6 +22,7 @@ import {
 } from './list-tree';
 import {
   OriginStyle,
+  appendDestinationLink,
   appendOriginLink,
   normalizeForMatch,
   renumber,
@@ -53,6 +54,8 @@ export interface MoveOptions {
   /** Mark the source with `movedMarker` instead of deleting it. */
   markSourceAsMoved: boolean;
   movedMarker: string;
+  /** Alias for the destination link written on a kept-in-place source line. */
+  destinationAlias: string;
   /** Remove a parent left with no children after its last child moved out. */
   pruneEmptyAncestors: boolean;
   originStyle: OriginStyle;
@@ -308,6 +311,7 @@ export const moveItem = (
   lineNum: number,
   sourceNoteName: string,
   opts: MoveOptions,
+  targetNoteName = '',
 ): MoveResult | null => {
   const item = parseListItem(sourceLines[lineNum] ?? '', lineNum, opts.tabSize);
   if (!item) {
@@ -400,7 +404,22 @@ export const moveItem = (
   const source = sourceLines.slice();
   for (const r of [...ranges].reverse()) {
     if (opts.markSourceAsMoved) {
-      source[r.start] = setCheckbox(source[r.start], opts.movedMarker);
+      // The whole subtree travelled, so every incomplete task in it gets the
+      // marker — a child left as `[ ]` would read as still waiting here.
+      // Completed children keep their `[x]` as the record of when they were
+      // done.
+      for (let i = r.start; i < r.end; i++) {
+        const parsed = parseListItem(source[i], i, opts.tabSize);
+        if (parsed && parsed.checkbox !== null && !isComplete(parsed)) {
+          source[i] = setCheckbox(source[i], opts.movedMarker);
+        }
+      }
+      source[r.start] = appendDestinationLink(
+        source[r.start],
+        targetNoteName,
+        opts.originStyle,
+        opts.destinationAlias,
+      );
     } else {
       source.splice(r.start, r.end - r.start);
     }

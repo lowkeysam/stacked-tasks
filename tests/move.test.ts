@@ -329,6 +329,81 @@ describe('options', () => {
     ]);
   });
 
+  it('marks the whole subtree when a parent is kept in place', () => {
+    const src = lines(
+      [
+        '## Tasks',
+        '',
+        '- [ ] [[Toku]]',
+        '  - [ ] Get Eric to remit the cash',
+        '  - [x] Personal shares sold',
+      ].join('\n'),
+    );
+
+    const r = moveItem(
+      src,
+      EMPTY,
+      2,
+      SOURCE,
+      opts({ markSourceAsMoved: true }),
+      '2026-08-24',
+    )!;
+
+    expect(r.source).toEqual([
+      '## Tasks',
+      '',
+      '- [>] [[Toku]] [[2026-08-24|→ to]]',
+      '  - [>] Get Eric to remit the cash',
+      '  - [x] Personal shares sold',
+    ]);
+    expect(r.target).toEqual([
+      '## Tasks',
+      '',
+      '- [ ] [[Toku]] [[2026-08-14|← from]]',
+      '  - [ ] Get Eric to remit the cash',
+      '  - [x] Personal shares sold',
+    ]);
+  });
+
+  it('replaces a previous destination link rather than stacking them', () => {
+    const src = lines(
+      ['## Tasks', '', '- [>] Ship it [[2026-08-20|→ to]]'].join('\n'),
+    );
+
+    const r = moveItem(
+      src,
+      EMPTY,
+      2,
+      SOURCE,
+      opts({ markSourceAsMoved: true }),
+      '2026-08-24',
+    )!;
+
+    expect(r.source.at(-1)).toBe('- [>] Ship it [[2026-08-24|→ to]]');
+    expect(r.target.at(-1)).toBe('- [ ] Ship it [[2026-08-14|← from]]');
+  });
+
+  it('keeps origin history and block IDs beside the destination link', () => {
+    const src = lines(
+      ['## Tasks', '', '- [ ] Ship it [[2026-08-12|← from]] ^task-ship'].join(
+        '\n',
+      ),
+    );
+
+    const r = moveItem(
+      src,
+      EMPTY,
+      2,
+      SOURCE,
+      opts({ markSourceAsMoved: true }),
+      '2026-08-24',
+    )!;
+
+    expect(r.source.at(-1)).toBe(
+      '- [>] Ship it [[2026-08-12|← from]] [[2026-08-24|→ to]] ^task-ship',
+    );
+  });
+
   it('can prune a parent left with no children', () => {
     const r = moveItem(
       source,

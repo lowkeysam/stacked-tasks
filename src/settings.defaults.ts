@@ -15,6 +15,7 @@ export interface StackedTasksSettings {
   cascadeSkipCompleted: boolean;
   markSourceAsMoved: boolean;
   movedMarker: string;
+  destinationAlias: string;
   pruneEmptyAncestors: boolean;
   originStyle: OriginStyle;
   originAlias: string;
@@ -30,6 +31,7 @@ export const DEFAULT_SETTINGS: StackedTasksSettings = {
   cascadeSkipCompleted: true,
   markSourceAsMoved: false,
   movedMarker: '>',
+  destinationAlias: '→ to',
   pruneEmptyAncestors: false,
   originStyle: 'aliased',
   originAlias: '← from',

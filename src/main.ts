@@ -174,6 +174,7 @@ export default class StackedTasksPlugin extends Plugin {
       cursor.line,
       source.basename,
       this.moveOptions(),
+      target.basename,
     );
 
     if (!result) {
@@ -213,6 +214,7 @@ export default class StackedTasksPlugin extends Plugin {
         idx,
         source.basename,
         opts,
+        target.basename,
       );
       if (!result) {
         break;

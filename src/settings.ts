@@ -180,7 +180,7 @@ export class StackedTasksSettingTab extends PluginSettingTab {
     new Setting(containerEl)
       .setName('Keep moved tasks in place')
       .setDesc(
-        'Instead of deleting the task from the original note, mark it so the note still records that the work was planned that day.',
+        'Instead of deleting the task from the original note, mark it and its subtasks so the note still records that the work was planned that day. A link to the destination note is appended, using the origin-tracking link style.',
       )
       .addToggle((t) =>
         t
@@ -205,6 +205,23 @@ export class StackedTasksSettingTab extends PluginSettingTab {
               await save();
             }),
         );
+
+      if (this.plugin.settings.originStyle === 'aliased') {
+        new Setting(containerEl)
+          .setName('Destination link alias')
+          .setDesc(
+            'Alias for the link appended to the kept task, pointing at the note it moved to.',
+          )
+          .addText((t) =>
+            t
+              .setPlaceholder('→ to')
+              .setValue(this.plugin.settings.destinationAlias)
+              .onChange(async (v) => {
+                this.plugin.settings.destinationAlias = v;
+                await save();
+              }),
+          );
+      }
     }
   }
 }
